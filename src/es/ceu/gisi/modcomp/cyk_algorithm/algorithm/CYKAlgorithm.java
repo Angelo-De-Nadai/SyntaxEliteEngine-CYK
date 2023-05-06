@@ -16,9 +16,9 @@ import java.util.Map;
  */
 public class CYKAlgorithm implements CYKAlgorithmInterface {
 
-    private String[][] table;
+    private Character[][][] table;
 
-    private static List<Character> nonTerminals;
+    private List<Character> nonTerminals;
     private List<Character> terminals;
     private Character startSymbol;
     private Map<Character, List<String>> productions;
@@ -41,7 +41,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
         if (!nonTerminals.contains(nonterminal) && Character.isLetter(nonterminal) && Character.isUpperCase(nonterminal)) {
             nonTerminals.add(nonterminal);
         } else {
-            throw new UnsupportedOperationException("This is not a non terminal value.");
+            throw new CYKAlgorithmException();
         }
     }
 
@@ -56,7 +56,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
         if (!terminals.contains(terminal) && Character.isLetter(terminal) && Character.isLowerCase(terminal)) {
             terminals.add(terminal);
         } else {
-            throw new UnsupportedOperationException("This is not a terminal value.");
+            throw new CYKAlgorithmException();
         }
     }
 
@@ -70,7 +70,11 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * conjunto de elementos no terminales.
      */
     public void setStartSymbol(char nonterminal) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (!nonTerminals.contains(nonterminal)) {
+            startSymbol = nonterminal;
+        } else {
+            throw new CYKAlgorithmException();
+        }
     }
 
     @Override
@@ -85,7 +89,33 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * previamente.
      */
     public void addProduction(char nonterminal, String production) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (nonTerminals.contains(nonterminal) && validProduction(production)) {
+            if (!productions.get(nonterminal).contains(production)) {
+                productions.get(nonterminal).add(production);
+            } else {
+                throw new CYKAlgorithmException();
+            }
+        } else {
+            throw new CYKAlgorithmException();
+        }
+    }
+
+    /**
+     * verificación de corrección de sintaxis de producción
+     *
+     * @param production "BC" o "a"
+     * @return true si la producción respeta las reglas de la gramática, si no
+     * false
+     */
+    public boolean validProduction(String production) {
+        int length = production.length();
+        if (length == 1 && terminals.contains(production.charAt(0))) {
+            return true;
+        }
+        if (length == 2 && nonTerminals.contains(production.charAt(0)) && nonTerminals.contains(production.charAt(1))) {
+            return true;
+        }
+        return false;
     }
 
     @Override
