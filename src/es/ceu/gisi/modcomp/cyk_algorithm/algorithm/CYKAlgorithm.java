@@ -15,10 +15,10 @@ import java.util.Map;
  * @author Sergio Saugar García <sergio.saugargarcia@ceu.es>
  */
 public class CYKAlgorithm implements CYKAlgorithmInterface {
-    
+
     private String[][] table;
 
-    private List<Character> nonTerminals;
+    private static List<Character> nonTerminals;
     private List<Character> terminals;
     private Character startSymbol;
     private Map<Character, List<String>> productions;
@@ -38,7 +38,11 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * @throws CYKAlgorithmException Si el elemento no es una letra mayúscula.
      */
     public void addNonTerminal(char nonterminal) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (!nonTerminals.contains(nonterminal) && Character.isLetter(nonterminal) && Character.isUpperCase(nonterminal)) {
+            nonTerminals.add(nonterminal);
+        } else {
+            throw new UnsupportedOperationException("This is not a non terminal value.");
+        }
     }
 
     @Override
@@ -49,7 +53,11 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * @throws CYKAlgorithmException Si el elemento no es una letra minúscula.
      */
     public void addTerminal(char terminal) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (!terminals.contains(terminal) && Character.isLetter(terminal) && Character.isLowerCase(terminal)) {
+            terminals.add(terminal);
+        } else {
+            throw new UnsupportedOperationException("This is not a terminal value.");
+        }
     }
 
     @Override
