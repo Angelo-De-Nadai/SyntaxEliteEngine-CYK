@@ -162,7 +162,10 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * dejando el algoritmo listo para volver a insertar una gramática nueva.
      */
     public void removeGrammar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        terminals = new ArrayList();
+        nonTerminals = new ArrayList();
+        startSymbol = null;
+        productions = new HashMap();
     }
 
     @Override
@@ -178,7 +181,12 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * salida podría ser: "S::=AB|BC".
      */
     public String getProductions(char nonterminal) {
-        throw new UnsupportedOperationException("Not supported yet.");
+       if(!productions.containsKey(nonterminal))
+            return null;
+      String s = nonterminal+"::=";
+      for(String n : productions.get(nonterminal))
+           s+=n+"|";
+      return s.substring(0, s.length()-1);
     }
 
     @Override
@@ -189,7 +197,19 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * elementos no terminales.
      */
     public String getGrammar() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String grammar = "G=({";
+        for(Character c : terminals)
+            grammar+=c+",";
+        grammar = grammar.substring(0, grammar.length()-1);
+        grammar+="},{";
+        for(Character c : nonTerminals)
+            grammar+=c+",";
+        grammar = grammar.substring(0, grammar.length()-1);
+        grammar+="},"+startSymbol+",P)\nP={\n";
+        for(Map.Entry<Character, List<String>> entry : productions.entrySet())
+            grammar+=getProductions(entry.getKey())+"\n";
+        
+        return grammar+"}";
     }
 
 }
