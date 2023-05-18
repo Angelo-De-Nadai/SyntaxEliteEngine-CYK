@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class CYKAlgorithm implements CYKAlgorithmInterface {
 
-    private Character[][][] table;
+    private String[][] table;
 
     private List<Character> nonTerminals;
     private List<Character> terminals;
@@ -132,7 +132,32 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * gramática es vacía o si el autómata carece de axioma.
      */
     public boolean isDerived(String word) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (productions.isEmpty() || terminals.isEmpty()) //If there are no productions or terminals
+        {
+            throw new CYKAlgorithmException();
+        }
+
+        for (char c : word.toCharArray()) {
+            if (!terminals.contains(c)) //If the string doesn't contain only terminals( of the grammar)
+            {
+                throw new CYKAlgorithmException();
+            }
+        }
+        table = new String[word.length()][word.length()];
+        createMatrix(word);
+
+        //I take the string at the top of the triangle
+        String result = table[0][table[0].length];
+
+        if (result.contains(Character.toString(startSymbol))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void createMatrix(String word) {
+
     }
 
     @Override
@@ -152,7 +177,40 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * gramática es vacía o si el autómata carece de axioma.
      */
     public String algorithmStateToString(String word) throws CYKAlgorithmException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if (productions.isEmpty() || terminals.isEmpty()) //If there are no productions or terminals
+        {
+            throw new CYKAlgorithmException();
+        }
+
+        for (char c : word.toCharArray()) {
+            if (!terminals.contains(c)) //If the string doesn't contain only terminals( of the grammar)
+            {
+                throw new CYKAlgorithmException();
+            }
+        }
+
+        // Calculate the maximum length of strings in each column to paginate after
+        int[] maxLength = new int[table[0].length];
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                int length = table[i][j].length();
+                if (length > maxLength[j]) {
+                    maxLength[j] = length;
+                }
+            }
+        }
+
+        // Create table string with pagination
+        String result = "";
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                String spazi = " ".repeat(maxLength[j] - table[i][j].length() + 1);
+                result += table[i][j] + spazi;
+            }
+            result += "\n";
+        }
+
+        return result;
     }
 
     @Override
@@ -181,12 +239,14 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      * salida podría ser: "S::=AB|BC".
      */
     public String getProductions(char nonterminal) {
-       if(!productions.containsKey(nonterminal))
+        if (!productions.containsKey(nonterminal)) {
             return null;
-      String s = nonterminal+"::=";
-      for(String n : productions.get(nonterminal))
-           s+=n+"|";
-      return s.substring(0, s.length()-1);
+        }
+        String s = nonterminal + "::=";
+        for (String n : productions.get(nonterminal)) {
+            s += n + "|";
+        }
+        return s.substring(0, s.length() - 1);
     }
 
     @Override
@@ -198,18 +258,21 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
      */
     public String getGrammar() {
         String grammar = "G=({";
-        for(Character c : terminals)
-            grammar+=c+",";
-        grammar = grammar.substring(0, grammar.length()-1);
-        grammar+="},{";
-        for(Character c : nonTerminals)
-            grammar+=c+",";
-        grammar = grammar.substring(0, grammar.length()-1);
-        grammar+="},"+startSymbol+",P)\nP={\n";
-        for(Map.Entry<Character, List<String>> entry : productions.entrySet())
-            grammar+=getProductions(entry.getKey())+"\n";
-        
-        return grammar+"}";
+        for (Character c : terminals) {
+            grammar += c + ",";
+        }
+        grammar = grammar.substring(0, grammar.length() - 1);
+        grammar += "},{";
+        for (Character c : nonTerminals) {
+            grammar += c + ",";
+        }
+        grammar = grammar.substring(0, grammar.length() - 1);
+        grammar += "}," + startSymbol + ",P)\nP={\n";
+        for (Map.Entry<Character, List<String>> entry : productions.entrySet()) {
+            grammar += getProductions(entry.getKey()) + "\n";
+        }
+
+        return grammar + "}";
     }
 
 }
