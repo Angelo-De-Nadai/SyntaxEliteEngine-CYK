@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 /**
  * Esta clase contiene la implementación de la interfaz CYKAlgorithmInterface
  * que establece los métodos necesarios para el correcto funcionamiento del
@@ -92,12 +93,12 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
             throw new CYKAlgorithmException();
         }
         if (productions.get(nonterminal) != null) {
-            if (!productions.get(nonterminal).contains(production)) {//Se già lo contiene
+            if (!productions.get(nonterminal).contains(production)) {//if it's already contained
                 productions.get(nonterminal).add(production);
             } else {
                 throw new CYKAlgorithmException();
             }
-        }else{
+        } else {
             ArrayList<String> array = new ArrayList<>();
             array.add(production);
             productions.put(nonterminal, array);
@@ -151,7 +152,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
         createMatrix(word);
 
         //I take the string at the top of the triangle
-        String result = table[table[0].length-1][0];
+        String result = table[table[0].length - 1][0];
 
         if (result.contains(Character.toString(startSymbol))) {
             return true;
@@ -162,6 +163,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
 
     /**
      * create and fill the matrix
+     *
      * @param word
      */
     private void createMatrix(String word) {
@@ -172,11 +174,10 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
                 table[i][j] = "";
             }
         }
-        //forse devo inizializzare tutti gli elemnti della tabella con stringhe vuote
 
         //fill the first row
         for (int i = 0; i < length; i++) {
-            for (Map.Entry<Character, List<String>> entry : productions.entrySet()) //scorrere produzioni in cerca della lettera
+            for (Map.Entry<Character, List<String>> entry : productions.entrySet()) //scroll through productions in search of the letter
             {
                 if (entry.getValue().contains(String.valueOf(word.charAt(i)))) {
                     table[0][i] += "" + entry.getKey();
@@ -194,6 +195,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
 
     /**
      * select the column of elements to compare in the algorithm
+     *
      * @param i current row
      * @param j current column
      * @return string array with the elements to compare in the algorithm
@@ -212,22 +214,25 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
 
     /**
      * select the row of elements to compare in the algorithm
+     *
      * @param i current row
      * @param j current column
      * @return string array with the elements to compare in the algorithm
      */
     private String[] getColumn(int i, int j) {
         String[] array = new String[i];
-        int k=0;
-            while(k!=i) {
-                array[k] = table[k][j];
-                k++;
+        int k = 0;
+        while (k != i) {
+            array[k] = table[k][j];
+            k++;
         }
         return array;
     }
 
     /**
-     * calculates the combinations between the cells of the two arrays and checks that they are valid
+     * calculates the combinations between the cells of the two arrays and
+     * checks that they are valid
+     *
      * @param array1
      * @param array2
      * @return Result string of the calculation with the cyk algorithm
@@ -240,10 +245,10 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
             for (int j = 0; j < array1[i].length(); j++) {  //first string
                 for (int k = 0; k < array2[i].length(); k++) {  //second string
                     String s = "" + array1[i].charAt(j) + array2[i].charAt(k);
-                    if (isStringContained(s) ) {
+                    if (isStringContained(s)) {
                         for (Map.Entry<Character, List<String>> entry : productions.entrySet()) {
-                            if (entry.getValue().contains(s)&&!isCharacterPresent(result, entry.getKey())) {
-                                result += ""+entry.getKey();
+                            if (entry.getValue().contains(s) && !isCharacterPresent(result, entry.getKey())) {
+                                result += "" + entry.getKey();
                             }
                         }
                     }
@@ -255,6 +260,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
 
     /**
      * Check if productions contains the entered string
+     *
      * @param searchValue string to check
      * @return true if contained, false if it isn't
      */
@@ -268,28 +274,15 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
     }
 
     /**
-     * returns the key referring to the value contained in the productions map
-     * @param value to check
-     * @return key referring to the value
-     */
-    private Character getKeyFromValue(String value) {
-        for (Map.Entry<Character, List<String>> entry : productions.entrySet()) {
-            if (entry.getValue().contains(value)) {
-                return entry.getKey();
-            }
-        }
-        return null; // Ritorna null se il valore non è presente nella mappa
-    }
-
-    /**
      * check if a character is present in a string
+     *
      * @param str
      * @param ch
      * @return true if contained, false if it isn't
      */
     private boolean isCharacterPresent(String str, Character ch) {
         for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == ch) {//ci potrebbero essere degli errori per il confronto tra char e character
+            if (str.charAt(i) == ch) {
                 return true;
             }
         }
@@ -324,7 +317,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
                 throw new CYKAlgorithmException();
             }
         }
-        createMatrix( word);
+        createMatrix(word);
         // Calculate the maximum length of strings in each column to paginate after
         int[] maxLength = new int[table[0].length];
         for (int i = 0; i < table.length; i++) {
@@ -341,7 +334,7 @@ public class CYKAlgorithm implements CYKAlgorithmInterface {
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table.length - i; j++) {
                 String spazi = " ".repeat(maxLength[j] - table[i][j].length() + 1);
-                result +=""+ table[i][j] + spazi;
+                result += "" + table[i][j] + spazi;
             }
             result += "\n";
         }
