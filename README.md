@@ -35,6 +35,7 @@ Extraction of the diagonal cells using the "getDiagonal" method.
 As mentioned earlier, the "getDiagonal" and "getColumn" methods are responsible for extracting the relevant cells needed to calculate the current cell of the table. These extracted cells are later used in the "getCombinationsResult" method:
 
 <img width="617" alt="Screenshot 2023-05-19 alle 23 20 17" src="https://github.com/Angelo-De-Nadai/cyk-adenadai/assets/80247207/c5731436-ea6b-4b51-b35a-d91f164284be">
+
 In this method, two arrays of strings obtained from the previous methods are iterated. The index "i" is used to iterate through all cells of the two arrays. Then, the two "for" loops with indices J and K respectively point to the characters of the first string and the second string, generating all possible combinations. With the last "for" loop, the presence of these combinations in the "productions" HashMap is checked, and if found, the key value will be added to the string that will be returned from the method.
 
 <img width="936" alt="Screenshot 2023-05-19 alle 23 21 15" src="https://github.com/Angelo-De-Nadai/cyk-adenadai/assets/80247207/62e28805-7611-41db-9719-68bdbd9e2398">
